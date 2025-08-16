@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.main_group_ekn47.eventlib.config.EventLibAutoConfiguration
