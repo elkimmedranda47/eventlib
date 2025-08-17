@@ -1,5 +1,5 @@
 package com.main_group_ekn47.eventlib.config;
-
+/*
 import com.main_group_ekn47.eventlib.monitoring.LoggingHandler;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -43,5 +43,13 @@ public class EventLibApplicationRunner implements ApplicationRunner {
                             properties.getRabbitmq().getRoutingKey() :
                             properties.getRabbitmq().getQueue()));
         }
+        loggingHandler.logInfo("╔══════════════════════════════════════╗");
+        loggingHandler.logInfo("║        Detalles  EventLib            ║");
+        loggingHandler.logInfo("╚══════════════════════════════════════╝");
+
+        loggingHandler.logInfo("RabbitMQ Host: " + properties.getRabbitmq().getHost());
+        loggingHandler.logInfo("RabbitMQ Port: " + properties.getRabbitmq().getPort());
+        loggingHandler.logInfo("RabbitMQ Username: " + properties.getRabbitmq().getUsername());
+        loggingHandler.logInfo("RabbitMQ Password: " + properties.getRabbitmq().getPassword());
     }
-}
+}*/
