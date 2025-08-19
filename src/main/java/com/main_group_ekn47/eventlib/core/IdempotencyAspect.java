@@ -47,7 +47,7 @@ public class IdempotencyAspect {
     private Object processEvent(IntegrationEvent event, ProceedingJoinPoint joinPoint) {
         String eventId = event.getMetadata().getEventId();
         
-        return idempotencyStore.isProcessed(eventId)
+        return idempotencyStore.isProcessed(eventId)  // Consulta a Redis (KEY: "eventlib:idempotency:<eventId>")
             .flatMap(processed -> {
                 if (processed) return Mono.empty();
                 
@@ -55,7 +55,8 @@ public class IdempotencyAspect {
                     Object result = joinPoint.proceed();
                     if (result instanceof Mono) {
                         return ((Mono<?>) result)
-                            .flatMap(res -> idempotencyStore.markProcessed(eventId).thenReturn(res));
+                            .flatMap(res -> idempotencyStore.markProcessed(eventId).thenReturn(res));//idempotencyStore.markProcessed(eventId) // Guarda en Redis con TTL (24h por defecto)
+
                     }
                     return idempotencyStore.markProcessed(eventId).thenReturn(result);
                 } catch (Throwable e) {

@@ -14,12 +14,17 @@ public class RabbitMQPublisher implements MessagePublisher {
     private final LoggingHandler loggingHandler;
     private final String eventExchange;
 
-    public RabbitMQPublisher(RabbitTemplate rabbitTemplate, 
+    public RabbitMQPublisher(RabbitTemplate rabbitTemplate,
                              LoggingHandler loggingHandler,
                              MessagingProperties properties) {
         this.rabbitTemplate = rabbitTemplate;
         this.loggingHandler = loggingHandler;
         this.eventExchange = properties.getRabbitmq().getExchange();
+
+        System.out.println("********************************************************"+properties.getRabbitmq().getExchange());
+        System.out.println("Configuración RabbitMQ:");
+        System.out.println("- Exchange: " + this.eventExchange);
+        System.out.println("- Template: " + (rabbitTemplate != null ? "OK" : "NULL"));
     }
 
     @Override
@@ -27,6 +32,12 @@ public class RabbitMQPublisher implements MessagePublisher {
         try {
             String routingKey = topic + "." + eventName;
             rabbitTemplate.convertAndSend(eventExchange, routingKey, payload);
+            System.out.println("******************************************************** routingKey:  -->"+routingKey);
+            System.out.println("******************************************************** eventExchange:  -->"+eventExchange);
+            System.out.println("******************************************************** payload:  -->"+payload);
+
+
+
             loggingHandler.logInfo("Event published to RabbitMQ. Exchange: " + eventExchange + ", RoutingKey: " + routingKey);
         } catch (Exception e) {
             loggingHandler.logError("Error publishing event to RabbitMQ", e);

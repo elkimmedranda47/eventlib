@@ -1,55 +1,38 @@
 package com.main_group_ekn47.eventlib.config;
-/*
-import com.main_group_ekn47.eventlib.monitoring.LoggingHandler;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.scheduling.annotation.EnableScheduling;
+
+import com.main_group_ekn47.eventlib.core.IntegrationEvent;
+import com.main_group_ekn47.eventlib.service.EventPublisher; // Importa el nuevo servicio
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-
-
-import com.main_group_ekn47.eventlib.monitoring.LoggingHandler;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
-
-@EnableScheduling // <-- ¡Añade esto!
+import reactor.core.publisher.Mono;
 
 @Component
-public class EventLibApplicationRunner implements ApplicationRunner {
+public class EventLibApplicationRunner implements CommandLineRunner {
 
-    private final LoggingHandler loggingHandler;
-    private final MessagingProperties properties;
+    private final EventPublisher eventPublisher;
 
-    public EventLibApplicationRunner(LoggingHandler loggingHandler,
-                                     MessagingProperties properties) {
-        this.loggingHandler = loggingHandler;
-        this.properties = properties;
+    public EventLibApplicationRunner(EventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
-    public void run(ApplicationArguments args) {
-        loggingHandler.logInfo("╔══════════════════════════════════════╗");
-        loggingHandler.logInfo("║      EventLib Iniciada Correctamente ║");
-        loggingHandler.logInfo("╚══════════════════════════════════════╝");
-        loggingHandler.logInfo("Modo Outbox: " +
-                (properties.getOutbox().isEnabled() ? "ACTIVADO" : "DESACTIVADO"));
-        loggingHandler.logInfo("Broker: " + properties.getBroker().toUpperCase());
+    public void run(String... args) throws Exception {
+        System.out.println(">>> Generando evento de prueba a través del Outbox...");
 
-        if("rabbitmq".equalsIgnoreCase(properties.getBroker())) {
-            loggingHandler.logInfo("Exchange: " + properties.getRabbitmq().getExchange());
-            loggingHandler.logInfo("Routing Key: " +
-                    (properties.getRabbitmq().getRoutingKey() != null ?
-                            properties.getRabbitmq().getRoutingKey() :
-                            properties.getRabbitmq().getQueue()));
-        }
-        loggingHandler.logInfo("╔══════════════════════════════════════╗");
-        loggingHandler.logInfo("║        Detalles  EventLib            ║");
-        loggingHandler.logInfo("╚══════════════════════════════════════╝");
-
-        loggingHandler.logInfo("RabbitMQ Host: " + properties.getRabbitmq().getHost());
-        loggingHandler.logInfo("RabbitMQ Port: " + properties.getRabbitmq().getPort());
-        loggingHandler.logInfo("RabbitMQ Username: " + properties.getRabbitmq().getUsername());
-        loggingHandler.logInfo("RabbitMQ Password: " + properties.getRabbitmq().getPassword());
+        // Llama al método desde el bean del servicio para que el aspecto funcione
+        eventPublisher.publishTestEvent()
+                .doOnNext(event -> System.out.println("Evento de prueba generado. El OutboxPublisher lo gestionará pronto."))
+                .subscribe();
     }
-}*/
+
+    public static class TestEvent extends IntegrationEvent {
+        private String message;
+        public TestEvent(String message) {
+            super("TestEvent");
+            this.message = message;
+        }
+        public String getMessage() {
+            return message;
+        }
+    }
+}
