@@ -3,7 +3,9 @@ package com.main_group_ekn47.eventlib.core;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MessageSerializer {
     private final ObjectMapper objectMapper = new ObjectMapper();
 

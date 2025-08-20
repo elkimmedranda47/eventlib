@@ -43,18 +43,7 @@ public class OutboxPublisher {
    //  this.pollingInterval = pollingInterval;   // Intervalo de polling (ej: 5000 ms)
 
  }
-    //@Scheduled(fixedDelayString = "#{@pollingInterval}")
-  //  @Scheduled(fixedDelayString = "${messaging.outbox.polling-interval}")
-/*
-    public void publishPendingEvents() {
-        outboxRepository.findUnpublishedEvents()
-            .delayElements(Duration.ofMillis(100)) // Control de tasa
-            .flatMap(this::publishEvent)
-            .onErrorContinue((e, o) ->
-                loggingHandler.logError("Error processing outbox event: " + o, e))
-            .subscribe();
-    }
-*/
+
     @Scheduled(fixedDelayString = "${messaging.outbox.polling-interval}")
     public void publishPendingEvents() {
         loggingHandler.logInfo(">>> Ejecutando publishPendingEvents...");
@@ -66,25 +55,9 @@ public class OutboxPublisher {
                         loggingHandler.logError("Error processing outbox event: " + o, e))
                 .subscribe();                          // Inicia el flujo Reactor
     }
-/*
-    private Mono<Void> publishEvent(OutboxEvent event) {
-        try {
-            JsonNode payload = serializer.deserializeToJson(event.getPayload());
-            messagePublisher.publish(event.getTopic(), event.getEventName(), payload);
 
-            return outboxRepository.markAsPublished(event.getId())
-                .doOnSuccess(v -> loggingHandler.logInfo(
-                    "Event published successfully: " + event.getId()))
-                .doOnError(e -> loggingHandler.logError(
-                    "Error marking event as published: " + event.getId(), e));
 
-        } catch (Exception e) {
-            loggingHandler.logError("Error publishing event: " + event.getId(), e);
-            return Mono.empty();
-        }
-    }
 
-    */
 private Mono<Void> publishEvent(OutboxEvent event) {
     try {
         // 1. Deserializa el payload JSON
