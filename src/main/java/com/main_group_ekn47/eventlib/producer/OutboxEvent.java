@@ -26,6 +26,8 @@ public class OutboxEvent implements Persistable<UUID> {
     private String payload;
     private Instant createdAt;
     private Instant publishedAt;
+    private String className; // <-- ¡Añade esta línea!
+
 
     @Override
     public UUID getId() {

@@ -63,6 +63,8 @@ public class MessagingProperties {
         private String exchange;
         private String queue;
         private String dlq;
+        // para uqe coja el nombre del archivo de propiedades
+        //private String dlx; //Agrega esta línea
         private String routingKey;
 
         // Getters y Setters
@@ -121,6 +123,17 @@ public class MessagingProperties {
         public void setDlq(String dlq) {
             this.dlq = dlq;
         }
+
+        /*
+        // para uqe coja el nombre del archivo de propiedades
+            public String getDlq() {
+            return dlq;
+        }
+
+        public void setDlq(String dlq) {
+            this.dlq = dlq;
+        }
+         */
 
         public String getRoutingKey() {
             return routingKey;

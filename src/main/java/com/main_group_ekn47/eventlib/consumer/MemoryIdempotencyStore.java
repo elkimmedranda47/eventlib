@@ -20,6 +20,8 @@ public class MemoryIdempotencyStore implements IdempotencyStore {
     @Override
     public Mono<Boolean> isProcessed(String eventId) {
         // Verificar si ya fue procesado completamente
+        System.out.println("🔍 Checking if processed: " + eventId);
+        System.out.println("Processed IDs: " + processedIds);
         if (processedIds.contains(eventId)) {
             return Mono.just(true);
         }

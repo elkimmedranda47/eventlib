@@ -1,7 +1,7 @@
 package com.main_group_ekn47.eventlib.config;
 
 import com.main_group_ekn47.eventlib.broker.rabbitmq.RabbitMQConfig;
-import com.main_group_ekn47.eventlib.broker.rabbitmq.RabbitMQReliabilityConfig;
+//import com.main_group_ekn47.eventlib.broker.rabbitmq.RabbitMQReliabilityConfig;
 import com.main_group_ekn47.eventlib.consumer.*;
 import com.main_group_ekn47.eventlib.monitoring.MetricsCollector;
 import com.main_group_ekn47.eventlib.monitoring.OutboxMetricsScheduler;
@@ -29,7 +29,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
     OutboxAutoConfiguration.class,
     MetricsConfig.class,
     RetryConfig.class,
-    RabbitMQReliabilityConfig.class,
+    //RabbitMQReliabilityConfig.class,
     ConsumerConfig.class // Importar explícitamente
 })
 public class EventLibAutoConfiguration {

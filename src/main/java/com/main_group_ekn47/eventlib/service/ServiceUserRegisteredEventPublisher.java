@@ -24,8 +24,8 @@ public class ServiceUserRegisteredEventPublisher {
      * @param command El comando que contiene los datos de registro.
      * @return Un Mono que emite el evento de registro.
      */
-    //@PublishEvent(topic = "user-events", eventName = "UserRegisteredEvent")
-    @PublishEvent(topic = "test", eventName = "TestEvent")
+    @PublishEvent(topic = "user-events", eventName = "UserRegisteredEvent")
+    //@PublishEvent(topic = "test", eventName = "TestEvent")
     public Mono<UserRegisteredEvent> registerUser() {
         // Lógica de ejemplo para crear el usuario.
         // En una aplicación real, aquí guardarías el usuario en la base de datos.

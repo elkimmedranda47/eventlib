@@ -2,11 +2,12 @@ package com.main_group_ekn47.eventlib.service.eventObjectDto;
 
 import com.main_group_ekn47.eventlib.core.IntegrationEvent;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-//@NoArgsConstructor
+@NoArgsConstructor
 public class UserRegisteredEvent extends IntegrationEvent {
 //ServiceThreeUserRegisteredEvent
 
