@@ -1,21 +1,17 @@
 
 
 package com.main_group_ekn47.eventlib.service;
-
 import com.main_group_ekn47.eventlib.core.PublishEvent;
 import com.main_group_ekn47.eventlib.service.eventObjectDto.UserRegisteredEvent;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
 import java.util.UUID;
 import java.util.Objects;
 
 @Service
 public class ServiceUserRegisteredEventPublisher {
-
     // Una instancia del generador de tokens para el ejemplo
     private final TokenGenerator tokenGenerator = new TokenGenerator();
-
     /**
      * Este método simula el registro de un usuario.
      * La anotación @PublishEvent se encarga de publicar el evento cuando
@@ -29,11 +25,11 @@ public class ServiceUserRegisteredEventPublisher {
     public Mono<UserRegisteredEvent> registerUser() {
         // Lógica de ejemplo para crear el usuario.
         // En una aplicación real, aquí guardarías el usuario en la base de datos.
-        RegisterUserCommand command = new RegisterUserCommand("micorreoEjemplo@gmail.com");
+        RegisterUserCommand command = new RegisterUserCommand("correoejemplo@gmail.com");
         User user = new User(new UserId(UUID.randomUUID()), new EmailAddress(command.getEmail()));
         String token = tokenGenerator.generateActivationToken();
-
-        // Retorna el evento que se publicará.
+        // Retorna el evento que se publicará para que el aspecto lo capture
+        //package com.main_group_ekn47.eventlib.producer.aop;PublishEventAspect{ se ejecuta public Object handlePublishEvent()}
         return Mono.just(new UserRegisteredEvent(user.getUserId().value().toString(), user.getEmailAddress().value(), token));
     }
 
@@ -90,7 +86,7 @@ public class ServiceUserRegisteredEventPublisher {
         private final String value;
 
         public EmailAddress(String value) {
-            this.value = Objects.requireNonNull("micooreoeEjemplo@Gmail.com");
+            this.value = value;
         }
 
         public String value() {

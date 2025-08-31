@@ -17,7 +17,9 @@ public class RabbitMQPublisher implements MessagePublisher {
     public RabbitMQPublisher(RabbitTemplate rabbitTemplate,
                              LoggingHandler loggingHandler,
                              MessagingProperties properties) {
+        //cosa importante
         this.rabbitTemplate = rabbitTemplate;
+
         this.loggingHandler = loggingHandler;
         this.eventExchange = properties.getRabbitmq().getExchange();
 
@@ -27,6 +29,8 @@ public class RabbitMQPublisher implements MessagePublisher {
         System.out.println("- Template: " + (rabbitTemplate != null ? "OK" : "NULL"));
     }
 
+
+    //implementacion de  package com.main_group_ekn47.eventlib.core;MessagePublisher.publish
     @Override
     public void publish(String topic, String eventName, Object payload) {
         try {

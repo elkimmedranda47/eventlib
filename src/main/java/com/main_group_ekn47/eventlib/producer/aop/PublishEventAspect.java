@@ -132,6 +132,7 @@ public class PublishEventAspect {
             return ((Mono<?>) result).flatMap(event -> {
 
                 if (event instanceof IntegrationEvent) {
+                    //como se ejecuta publishEvent, estamos en un aspecto el aspecto de  publicar evento
                     return saveOutboxEvent(publishEvent, (IntegrationEvent) event).then(Mono.just(event));
                 }
 

@@ -60,61 +60,41 @@ public class ServiceUserRegisteredEventRabbitListener {
 }
 
  */
+
+
 package com.main_group_ekn47.eventlib.service;
-
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.main_group_ekn47.eventlib.service.eventObjectDto.UserRegisteredEvent;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class ServiceUserRegisteredEventRabbitListener {
 
     @RabbitListener(queues = "eventlib_queue")
     public void handleUserRegisteredEvent(UserRegisteredEvent event) {
-        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Email: " + event.getUserEmail());
+        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! UserId:    " + event.getUserId());
+        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Email:     " + event.getUserEmail());
+        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Token:     " + event.getActivationToken());
+        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Fecha:     " + event.getMetadata().getTimestamp());
+        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventType: " + event.getMetadata().getEventType());
+        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventId:    " + event.getMetadata().getEventId());
         // ... resto de tu código
     }
 
 
-/*
-
-    private final ObjectMapper objectMapper;
-
-
-
-    @RabbitListener(queues = "eventlib_queue")
-    // Cambia el tipo de argumento a byte[]
-    public void handleUserRegisteredEvent(byte[] messageBody) {
-
-        System.out.println("!!!!5**<0>**** Recibido mensaje como array de bytes.");
-        //throw new RuntimeException("Error simulado para enviar a la DLQ");
-        try {
-            //  Usa el ObjectMapper para leer los bytes y convertirlos a JsonNode
-            JsonNode eventJson = objectMapper.readTree(messageBody);
-            UserRegisteredEvent event = objectMapper.treeToValue(eventJson, UserRegisteredEvent.class);
-            System.out.println("!!!!5**<0>**** Objeto Recibido desde el servicio Evento recibido...Email: " + event.getUserEmail());
-
-            // Si todo fue bien, marcas el mensaje como procesado
-           // idempotencyStore.storeMessageId(event.getEventId());
-
-        } catch (Exception e) {
-            //System.err.println("Error procesando el mensaje: " + e.getMessage());
-            // La librería RetryHandler o la DLQ manejarán esto
-              throw new RuntimeException("Error simulado para enviar a la DLQ: " + e.getMessage());
-        }
-    }
-
-
-    @Autowired
-    public ServiceUserRegisteredEventRabbitListener(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
-*/
-
+/*@RabbitListener(queues = "eventlib_queue")
+public Mono<Void> handleUserRegisteredEvent(UserRegisteredEvent event) {
+    return Mono.fromRunnable(() -> {
+                System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR REACTIVO! UserId: " + event.getUserId());
+                System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR REACTIVO! Email: " + event.getUserEmail());
+                System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR REACTIVO! Token: " + event.getActivationToken());
+                // Aquí tu lógica de negocio
+            })
+            .then()
+            .subscribeOn(Schedulers.boundedElastic());
+}*/
 
 }
 

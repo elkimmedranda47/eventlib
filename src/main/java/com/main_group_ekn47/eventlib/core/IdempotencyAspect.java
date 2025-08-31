@@ -1,5 +1,5 @@
 package com.main_group_ekn47.eventlib.core;
-
+/*
 import com.main_group_ekn47.eventlib.consumer.IdempotencyStore;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -8,13 +8,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-/**
- * El IdempotencyAspect utiliza la Programación Orientada a Aspectos (AOP)
- * para garantizar que los mensajes recibidos a través de RabbitMQ
- * (escuchados con @RabbitListener) sean procesados solo una vez.
- * Esto previene problemas de duplicación de datos en caso de reintentos
- * de mensajes por fallos de la red o del servicio.
- */
+
 @Aspect
 @Component
 public class IdempotencyAspect {
@@ -22,26 +16,14 @@ public class IdempotencyAspect {
     private final IdempotencyStore idempotencyStore;
     private final MessageSerializer serializer;
 
-    /**
-     * Inyección de dependencias para el almacén de idempotencia (normalmente Redis)
-     * y el serializador.
-     */
+
     public IdempotencyAspect(IdempotencyStore idempotencyStore) {
         this.idempotencyStore = idempotencyStore;
         this.serializer = new MessageSerializer();
         System.out.println("||0|||++++++++++******++++++++archivo IdempotencyAspect *******");
 
     }
-    /**
-     * Este es el "punto de corte" (pointcut) del aspecto.
-     * La anotación @Around indica que este método "envolverá" la ejecución
-     * de cualquier método que tenga la anotación @RabbitListener.
-     *
-     * @param joinPoint El objeto que representa la ejecución del método original.
-     * @param rabbitListener La instancia de la anotación @RabbitListener del método.
-     * @return El resultado (Mono) de la ejecución del flujo reactivo.
-     * @throws Throwable si el método original o la lógica del aspecto fallan.
-     */
+
     @Around("@annotation(rabbitListener)")
     public Object handleIdempotency(ProceedingJoinPoint joinPoint, RabbitListener rabbitListener) throws Throwable {
         // Obtiene los argumentos del método interceptado.
@@ -83,80 +65,6 @@ public class IdempotencyAspect {
         return joinPoint.proceed();
     }
 
-    /**
-     * Contiene la lógica principal de idempotencia de manera reactiva y no bloqueante.
-     * Este método construye la cadena de operaciones que se resolverá en el futuro.
-     *
-     * @param event El evento de integración.
-     * @param joinPoint El objeto de ejecución del método original.
-     * @return Un Mono que representa el flujo completo de procesamiento.
-     */
-    private Object xxprocessEvent(IntegrationEvent event, ProceedingJoinPoint joinPoint) {
-
-        String eventId = event.getMetadata().getEventId();
-        /* System.out.println("||5|||++++++++++******++++++++archivo IdempotencyAspect *******");
-
-        // --- Paso 2: Verifica la idempotencia (consulta asíncrona) ---
-        // Se llama a idempotencyStore.isProcessed, que devuelve un Mono.
-        // La ejecución no se bloquea aquí; la lógica continúa dentro del flatMap.
-        return idempotencyStore.isProcessed(eventId)  // Consulta a Redis (KEY: "eventlib:idempotency:<eventId>")
-            .flatMap(processed -> {
-                System.out.println("🔍 Evento " + eventId + " procesado?: " + processed);
-
-                // Si el evento ya fue procesado, se devuelve un Mono vacío y el flujo termina.
-                if (processed) return Mono.empty();
-                System.out.println("⚠️  Mensaje descartado por idempotencia");
-
-                // Si el evento no ha sido procesado, se procede con la lógica de negocio.
-                try {
-                    // Ejecuta el método original del consumidor (@RabbitListener).
-                    Object result = joinPoint.proceed();
-                    if (result instanceof Mono) {
-                        return ((Mono<?>) result)
-                                // --- Paso 3: Marca como procesado (después del éxito) ---
-                                // El flatMap espera a que el Mono de la lógica de negocio
-                                // se complete y luego ejecuta la siguiente operación.
-                                // Esto garantiza que solo se marca como procesado si todo va bien.
-                                .flatMap(res -> idempotencyStore.markProcessed(eventId).thenReturn(res));//idempotencyStore.markProcessed(eventId) // Guarda en Redis con TTL (24h por defecto)
-
-                    }
-                    // Si el resultado no es un Mono (caso síncrono), se marca como procesado
-                    // de forma bloqueante para garantizar la persistencia.
-                    return idempotencyStore.markProcessed(eventId).thenReturn(result);
-                } catch (Throwable e) {
-                    // Si el método original lanza una excepción, se propaga el error.
-                    return Mono.error(e);
-                }
-            });
-            */
-
-        return idempotencyStore.isProcessed(eventId)
-                .flatMap(processed -> {
-                    System.out.println("🔍 Evento " + eventId + " procesado?: " + processed);
-
-                    if (processed) {
-                        System.out.println("⚠️  Mensaje descartado por idempotencia");
-                        return Mono.empty();
-                    }
-
-                    // ¡FALTA ESTA LÍNEA! ↓
-                    System.out.println("✅  Evento NO procesado, continuando...");
-
-                    try {
-                        Object result = joinPoint.proceed();  // ← Esto debería ejecutar tu consumidor
-                        if (result instanceof Mono) {
-                            return ((Mono<?>) result)
-                                    .flatMap(res -> idempotencyStore.markProcessed(eventId).thenReturn(res));
-                        }
-                        return idempotencyStore.markProcessed(eventId).thenReturn(result);
-                    } catch (Throwable e) {
-                        return Mono.error(e);
-                    }
-                });
-
-
-
-    }
 
 
 
@@ -191,4 +99,243 @@ public class IdempotencyAspect {
     }
 
 
+
+
 }
+*/
+/*
+import com.main_group_ekn47.eventlib.consumer.IdempotencyStore;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class IdempotencyAspect {
+
+    private final IdempotencyStore idempotencyStore;
+    private final MessageSerializer serializer;
+
+    public IdempotencyAspect(IdempotencyStore idempotencyStore) {
+        this.idempotencyStore = idempotencyStore;
+        this.serializer = new MessageSerializer();
+        System.out.println("✅ IdempotencyAspect inicializado (modo sincrónico)");
+    }
+
+    @Around("@annotation(rabbitListener)")
+    public Object handleIdempotency(ProceedingJoinPoint joinPoint, RabbitListener rabbitListener) throws Throwable {
+        System.out.println("🎯 IdempotencyAspect interceptando mensaje");
+
+        Object[] args = joinPoint.getArgs();
+        if (args.length == 0) {
+            return joinPoint.proceed();
+        }
+
+        // 1. Extraer el mensaje
+        Object message = args[0];
+        IntegrationEvent event = null;
+
+        if (message instanceof IntegrationEvent) {
+            event = (IntegrationEvent) message;
+            System.out.println("📦 Evento IntegrationEvent detectado directamente");
+        }
+        else if (message instanceof String jsonPayload) {
+            System.out.println("📄 Mensaje JSON detectado, deserializando...");
+            try {
+                event = serializer.deserialize(jsonPayload, IntegrationEvent.class);
+                System.out.println("✅ Deserialización exitosa");
+            } catch (Exception e) {
+                System.out.println("❌ Error deserializando JSON: " + e.getMessage());
+                return joinPoint.proceed(); // Fallback
+            }
+        }
+        else {
+            System.out.println("🔍 Tipo de mensaje no manejado: " + message.getClass());
+            return joinPoint.proceed();
+        }
+
+        // 2. Verificar idempotencia (BLOQUEANTE - porque estamos en AOP)
+        String eventId = event.getMetadata().getEventId();
+        System.out.println("🎯 Verificando idempotencia para: " + eventId);
+
+        // 🔥 BLOQUEANTE pero necesario en AOP
+        boolean processed = idempotencyStore.isProcessed(eventId).block();
+        System.out.println("🔍 Resultado verificación: " + processed);
+
+        if (processed) {
+            System.out.println("⚠️ Mensaje descartado (ya procesado): " + eventId);
+            return null; // Descarta el mensaje
+        }
+
+        // 3. Ejecutar el método original
+        System.out.println("🚀 Ejecutando método original...");
+        Object result = joinPoint.proceed();
+        System.out.println("✅ Método original ejecutado exitosamente");
+
+        // 4. Marcar como procesado
+        System.out.println("✅ Marcando evento como procesado...");
+        idempotencyStore.markProcessed(eventId).block();
+        System.out.println("🎉 Evento completado y marcado: " + eventId);
+
+        return result;
+    }
+}*/
+
+/*
+import com.main_group_ekn47.eventlib.consumer.IdempotencyStore;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+
+@Aspect
+@Component
+public class IdempotencyAspect {
+
+    private final IdempotencyStore idempotencyStore;
+    private final MessageSerializer serializer;
+
+    public IdempotencyAspect(IdempotencyStore idempotencyStore) {
+        this.idempotencyStore = idempotencyStore;
+        this.serializer = new MessageSerializer();
+    }
+
+    @Around("@annotation(rabbitListener)")
+    public Object handleIdempotency(ProceedingJoinPoint joinPoint, RabbitListener rabbitListener) throws Throwable {
+        Object[] args = joinPoint.getArgs();
+        if (args.length == 0) {
+            return joinPoint.proceed();
+        }
+
+        Object message = args[0];
+        Mono<IntegrationEvent> eventMono;
+
+        if (message instanceof IntegrationEvent event) {
+            eventMono = Mono.just(event);
+        } else if (message instanceof String jsonPayload) {
+            try {
+                IntegrationEvent event = serializer.deserialize(jsonPayload, IntegrationEvent.class);
+                eventMono = Mono.just(event);
+            } catch (Exception e) {
+                return joinPoint.proceed();
+            }
+        } else {
+            return joinPoint.proceed();
+        }
+
+        // El flujo reactivo no bloqueante comienza aquí
+        return eventMono
+                .flatMap(event -> {
+                    String eventId = event.getMetadata().getEventId();
+                    return idempotencyStore.isProcessed(eventId)
+                            .flatMap(processed -> {
+                                if (Boolean.TRUE.equals(processed)) {
+                                    System.out.println("⚠️ Mensaje descartado (ya procesado): " + eventId);
+                                    return Mono.empty();
+                                }
+                                // No fue procesado, se continúa con el flujo normal
+                                try {
+                                    Object result = joinPoint.proceed();
+                                    if (result instanceof Mono) {
+                                        return ((Mono<?>) result)
+                                                .flatMap(res -> idempotencyStore.markProcessed(eventId).thenReturn(res));
+                                    }
+                                    return idempotencyStore.markProcessed(eventId).thenReturn(result);
+                                } catch (Throwable e) {
+                                    return Mono.error(e);
+                                }
+                            });
+                });
+    }
+}*/
+
+import com.main_group_ekn47.eventlib.consumer.IdempotencyStore;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+
+@Aspect
+@Component
+public class IdempotencyAspect {
+
+    private final IdempotencyStore idempotencyStore;
+
+    public IdempotencyAspect(IdempotencyStore idempotencyStore) {
+        this.idempotencyStore = idempotencyStore;
+    }
+
+    @Around("@annotation(rabbitListener)")
+    public Object handleIdempotency(ProceedingJoinPoint joinPoint, RabbitListener rabbitListener) {
+        System.out.println("🎯🔍 ASPECTO - Iniciando procesamiento...");
+
+        Object[] args = joinPoint.getArgs();
+        if (args.length == 0) {
+            System.out.println("🎯🔍 ASPECTO - Sin argumentos, procediendo...");
+            return executeBlocking(joinPoint);
+        }
+
+        Object message = args[0];
+        System.out.println("🎯🔍 ASPECTO - Tipo de mensaje: " + message.getClass().getName());
+
+        if (!(message instanceof IntegrationEvent)) {
+            System.out.println("🎯🔍 ASPECTO - No es IntegrationEvent, procediendo...");
+            return executeBlocking(joinPoint);
+        }
+
+        IntegrationEvent event = (IntegrationEvent) message;
+        String eventId = event.getMetadata().getEventId();
+        System.out.println("🎯🔍 ASPECTO - Procesando evento: " + eventId);
+
+        return idempotencyStore.isProcessed(eventId)
+                .doOnNext(processed -> System.out.println("🎯🔍 ASPECTO - isProcessed: " + processed))
+                .flatMap(processed -> {
+                    if (processed) {
+                        System.out.println("🎯🔍 ASPECTO - Evento ya procesado, descartando: " + eventId);
+                        return Mono.empty();
+                    }
+                    System.out.println("🎯🔍 ASPECTO - Evento NUEVO, ejecutando: " + eventId);
+                    return executeAndMark(joinPoint, eventId);
+                })
+                .subscribeOn(Schedulers.boundedElastic())
+                .block();
+    }
+    private Mono<Object> executeBlocking(ProceedingJoinPoint joinPoint) {
+        return Mono.fromCallable(() -> {
+                    try {
+                        return joinPoint.proceed();
+                    } catch (Throwable e) {  // ✅ Capturar Throwable explícitamente
+                        throw new RuntimeException("Error ejecutando método original", e);
+                    }
+                })
+                .subscribeOn(Schedulers.boundedElastic());
+    }
+    private Mono<Object> executeAndMark(ProceedingJoinPoint joinPoint, String eventId) {
+        return Mono.fromCallable(() -> {
+                    try {
+                        System.out.println("🚀🔍 ASPECTO - Ejecutando método original...");
+                        Object result = joinPoint.proceed();
+                        System.out.println("✅🔍 ASPECTO - Método original ejecutado exitosamente");
+                        return result;
+                    } catch (Throwable e) {  // ✅ Capturar Throwable
+                        System.out.println("❌🔍 ASPECTO - Error ejecutando método: " + e.getMessage());
+                        throw new RuntimeException("Error ejecutando método original", e);
+                    }
+                })
+                .flatMap(result ->
+                        idempotencyStore.markProcessed(eventId)
+                                .doOnSuccess(v -> System.out.println("✅🔍 ASPECTO - Evento marcado como procesado: " + eventId))
+                                .thenReturn(result)
+                )
+                .subscribeOn(Schedulers.boundedElastic());
+    }
+}
+
+    // ... resto del código igual
