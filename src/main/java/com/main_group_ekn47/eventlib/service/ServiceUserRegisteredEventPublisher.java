@@ -20,7 +20,7 @@ public class ServiceUserRegisteredEventPublisher {
      * @param command El comando que contiene los datos de registro.
      * @return Un Mono que emite el evento de registro.
      */
-    @PublishEvent(topic = "user-events", eventName = "UserRegisteredEvent")
+    /*@PublishEvent(topic = "user-events", eventName = "UserRegisteredEvent")
     //@PublishEvent(topic = "test", eventName = "TestEvent")
     public Mono<UserRegisteredEvent> registerUser() {
         // Lógica de ejemplo para crear el usuario.
@@ -31,6 +31,25 @@ public class ServiceUserRegisteredEventPublisher {
         // Retorna el evento que se publicará para que el aspecto lo capture
         //package com.main_group_ekn47.eventlib.producer.aop;PublishEventAspect{ se ejecuta public Object handlePublishEvent()}
         return Mono.just(new UserRegisteredEvent(user.getUserId().value().toString(), user.getEmailAddress().value(), token));
+    }*/
+
+    /**
+     * Este método simula el registro de un usuario.
+     * La anotación @PublishEvent se encarga de publicar el evento cuando
+     * el método retorna exitosamente.
+     *
+     * @return El evento de registro que se publicará.
+     */
+    @PublishEvent(topic = "user-events", eventName = "UserRegisteredEvent")
+    public UserRegisteredEvent registerUser() {
+        // Lógica de ejemplo para crear el usuario.
+        // En una aplicación real, aquí guardarías el usuario en la base de datos.
+        RegisterUserCommand command = new RegisterUserCommand("correoejemploekn47@gmail.com");
+        User user = new User(new UserId(UUID.randomUUID()), new EmailAddress(command.getEmail()));
+        String token = tokenGenerator.generateActivationToken();
+
+        // Retorna el objeto directamente, sin el Mono.
+        return new UserRegisteredEvent(user.getUserId().value().toString(), user.getEmailAddress().value(), token);
     }
 
 

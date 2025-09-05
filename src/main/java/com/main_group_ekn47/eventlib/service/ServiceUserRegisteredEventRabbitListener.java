@@ -60,42 +60,118 @@ public class ServiceUserRegisteredEventRabbitListener {
 }
 
  */
-
-
+/*
 package com.main_group_ekn47.eventlib.service;
+import com.main_group_ekn47.eventlib.consumer.IdempotencyStore;
 import com.main_group_ekn47.eventlib.service.eventObjectDto.UserRegisteredEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @Service
 public class ServiceUserRegisteredEventRabbitListener {
 
-    @RabbitListener(queues = "eventlib_queue")
-    public void handleUserRegisteredEvent(UserRegisteredEvent event) {
-        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! UserId:    " + event.getUserId());
-        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Email:     " + event.getUserEmail());
-        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Token:     " + event.getActivationToken());
-        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Fecha:     " + event.getMetadata().getTimestamp());
-        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventType: " + event.getMetadata().getEventType());
-        System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventId:    " + event.getMetadata().getEventId());
-        // ... resto de tu código
+    private static final Logger log = LoggerFactory.getLogger(ServiceUserRegisteredEventRabbitListener.class);
+
+    private final IdempotencyStore idempotencyStore;
+
+    // Se inyecta la interfaz IdempotencyStore a través del constructor.
+    public ServiceUserRegisteredEventRabbitListener(IdempotencyStore idempotencyStore) {
+        this.idempotencyStore = idempotencyStore;
     }
 
+    @RabbitListener(queues = "eventlib_queue")
+    public Mono<Void> handleUserRegisteredEvent(UserRegisteredEvent event) {
+        String eventId = event.getMetadata().getEventId();
 
-/*@RabbitListener(queues = "eventlib_queue")
-public Mono<Void> handleUserRegisteredEvent(UserRegisteredEvent event) {
-    return Mono.fromRunnable(() -> {
-                System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR REACTIVO! UserId: " + event.getUserId());
-                System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR REACTIVO! Email: " + event.getUserEmail());
-                System.out.println("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR REACTIVO! Token: " + event.getActivationToken());
-                // Aquí tu lógica de negocio
-            })
-            .then()
-            .subscribeOn(Schedulers.boundedElastic());
-}*/
+        // 1. Usa la tienda de idempotencia para verificar si el evento ya fue procesado.
+        return idempotencyStore.isProcessed(eventId)
+                .flatMap(isProcessed -> {
+                    if (Boolean.TRUE.equals(isProcessed)) {
+                        // Si el evento ya fue procesado, se registra y se termina el flujo.
+                        log.info("Evento duplicado detectado, ignorando: {}", eventId);
+                        return Mono.empty(); // Termina el flujo sin hacer nada más.
+                    }
 
+                    // Si es un evento nuevo, se marca como procesado inmediatamente.
+                    return idempotencyStore.markProcessed(eventId)
+                            .then(Mono.defer(() -> {
+                                // 2. Se ejecuta la lógica de negocio solo si el evento es nuevo y fue marcado.
+                                log.info("Procesando nuevo evento: {}", eventId);
+                                log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! UserId:    " + event.getUserId());
+                                log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Email:     " + event.getUserEmail());
+                                log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Token:     " + event.getActivationToken());
+                                log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Fecha:     " + event.getMetadata().getTimestamp());
+                                log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventType: " + event.getMetadata().getEventType());
+                                log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventId:    " + eventId);
+
+                                // Aquí iría el resto de tu lógica de negocio (por ejemplo, guardar en base de datos).
+                                // Retorna un Mono<Void> para indicar que la operación está completa.
+                                return Mono.empty();
+                            }));
+                });
+    }
+}
+ */
+
+package com.main_group_ekn47.eventlib.service;
+
+import com.main_group_ekn47.eventlib.consumer.IdempotencyStore;
+import com.main_group_ekn47.eventlib.service.eventObjectDto.UserRegisteredEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ServiceUserRegisteredEventRabbitListener {
+
+    private static final Logger log = LoggerFactory.getLogger(ServiceUserRegisteredEventRabbitListener.class);
+
+    private final IdempotencyStore idempotencyStore;
+
+    // Se inyecta la interfaz IdempotencyStore a través del constructor.
+    public ServiceUserRegisteredEventRabbitListener(IdempotencyStore idempotencyStore) {
+        this.idempotencyStore = idempotencyStore;
+    }
+
+    @RabbitListener(queues = "eventlib_queue")
+    public void handleUserRegisteredEvent(UserRegisteredEvent event) {
+        String eventId = event.getMetadata().getEventId();
+
+        try {
+            // 1. Usa la tienda de idempotencia para verificar si el evento ya fue procesado.
+            // Se usa .block() para convertir el Mono<Boolean> en un Boolean normal.
+            Boolean isProcessed = idempotencyStore.isProcessed(eventId).block();
+
+            if (Boolean.TRUE.equals(isProcessed)) {
+                // Si el evento ya fue procesado, se registra y se termina el flujo.
+                log.info("Evento duplicado detectado, ignorando: {}", eventId);
+                return; // Se usa 'return' para salir del método.
+            }
+
+            // 2. Si es un evento nuevo, se marca como procesado inmediatamente.
+            // Se usa .block() para esperar que la operación en Redis se complete.
+            idempotencyStore.markProcessed(eventId).block();
+
+            // 3. Se ejecuta la lógica de negocio solo si el evento es nuevo y fue marcado.
+            log.info("Procesando nuevo evento: {}", eventId);
+            log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! UserId:    " + event.getUserId());
+            log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Email:     " + event.getUserEmail());
+            log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Token:     " + event.getActivationToken());
+            log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! Fecha:     " + event.getMetadata().getTimestamp());
+            log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventType: " + event.getMetadata().getEventType());
+            log.info("🎯🔥🔥🔥 ¡ENTRÓ AL CONSUMIDOR! EventId:    " + eventId);
+
+            // Aquí iría el resto de tu lógica de negocio.
+
+        } catch (Exception e) {
+            log.error("Error al procesar el evento con ID {}: {}", eventId, e.getMessage());
+            // Puedes decidir si relanzar la excepción o manejarla de otra forma.
+        }
+    }
 }
 
 

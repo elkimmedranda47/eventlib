@@ -139,7 +139,12 @@ public class PublishEventAspect {
                 return Mono.just(event);
             });
         } else if (result instanceof IntegrationEvent) {
-            return saveOutboxEvent(publishEvent, (IntegrationEvent) result).block();
+            // se agrega un block(); para que el productor se cree como una funcion normal
+           // return saveOutboxEvent(publishEvent, (IntegrationEvent) result).block();
+            // Guardamos el evento y bloqueamos para asegurar que se persista.
+            // Luego, retornamos el objeto ORIGINAL para evitar el error de tipo.
+            saveOutboxEvent(publishEvent, (IntegrationEvent) result).block();
+            return result;
         }
 
         return result;

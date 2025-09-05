@@ -69,8 +69,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
-@ConditionalOnProperty(name = "messaging.idempotency.store", havingValue = "memory", matchIfMissing = true)
+//@Component
+//@ConditionalOnProperty(name = "messaging.idempotency.store", havingValue = "memory", matchIfMissing = true)
 public class MemoryIdempotencyStore implements IdempotencyStore {
 
     private final Set<String> processedIds = Collections.newSetFromMap(new ConcurrentHashMap<>());

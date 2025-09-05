@@ -30,10 +30,16 @@ public class EventLibApplicationRunner implements CommandLineRunner {
                 .subscribe();
         */
 
-
+        /*
         objetoEventRegisterdUsers.registerUser()
                 .doOnNext(event -> System.out.println("Evento de prueba generado. El registerUser lo gestionará pronto."))
                 .subscribe();
+
+         */
+        // Llama al método de manera imperativa
+        objetoEventRegisterdUsers.registerUser();
+        System.out.println("Evento de prueba generado. El registerUser lo gestionará pronto.");
+
     }
 
 
