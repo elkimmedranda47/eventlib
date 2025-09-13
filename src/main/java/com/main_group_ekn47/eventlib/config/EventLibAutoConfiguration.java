@@ -16,6 +16,7 @@ import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.context.annotation.Primary; // <-- Importación necesaria
 
 @AutoConfiguration
 @ConditionalOnClass(name = "org.springframework.amqp.rabbit.core.RabbitTemplate")
@@ -54,6 +55,7 @@ public class EventLibAutoConfiguration {
     }
 
     @Bean
+    @Primary // <-- ¡Añade esta anotación!
     public ReactiveRedisTemplate<String, String> reactiveRedisTemplate(
         ReactiveRedisConnectionFactory factory) {
 

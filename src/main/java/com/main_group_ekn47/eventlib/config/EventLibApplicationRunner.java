@@ -6,7 +6,7 @@ import com.main_group_ekn47.eventlib.service.ServiceUserRegisteredEventPublisher
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class EventLibApplicationRunner implements CommandLineRunner {
 
     private final ServiceOneEventPublisher eventPublisher;
@@ -19,7 +19,7 @@ public class EventLibApplicationRunner implements CommandLineRunner {
         this.objetoEventRegisterdUsers = objetoEventRegisterdUsers;
     }
 
-    @Override
+ //   @Override
     public void run(String... args) throws Exception {
         System.out.println(">>> Generando evento de prueba a través del Outbox...");
         //El PublishEventAspect intercepta el método publishTestEvent().
