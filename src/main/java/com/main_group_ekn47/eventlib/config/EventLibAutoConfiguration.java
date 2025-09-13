@@ -20,7 +20,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @AutoConfiguration
 @ConditionalOnClass(name = "org.springframework.amqp.rabbit.core.RabbitTemplate")
 @EnableConfigurationProperties({
-    MessagingProperties.class,
+   // MessagingProperties.class,
     ConsumerConfig.ConsumerProperties.class
 })
 @Import({

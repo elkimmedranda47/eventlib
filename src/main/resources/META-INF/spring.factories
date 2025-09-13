@@ -1,0 +1,13 @@
+# Auto-configuration classes
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.main_group_ekn47.eventlib.config.EventLibAutoConfiguration,\
+com.main_group_ekn47.eventlib.config.RabbitMQAutoConfiguration,\
+com.main_group_ekn47.eventlib.config.DLQConfig,\
+com.main_group_ekn47.eventlib.config.OutboxAutoConfiguration,\
+com.main_group_ekn47.eventlib.config.MetricsConfig,\
+com.main_group_ekn47.eventlib.config.RetryConfig,\
+com.main_group_ekn47.eventlib.config.RedisConfig
+
+# Configuration properties
+org.springframework.boot.context.properties.EnableConfigurationProperties=\
+com.main_group_ekn47.eventlib.config.MessagingProperties

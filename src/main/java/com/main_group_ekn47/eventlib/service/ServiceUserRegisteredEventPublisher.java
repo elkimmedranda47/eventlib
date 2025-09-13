@@ -3,6 +3,7 @@
 package com.main_group_ekn47.eventlib.service;
 import com.main_group_ekn47.eventlib.core.PublishEvent;
 import com.main_group_ekn47.eventlib.service.eventObjectDto.UserRegisteredEvent;
+import org.aspectj.lang.annotation.Around;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
@@ -40,6 +41,7 @@ public class ServiceUserRegisteredEventPublisher {
      *
      * @return El evento de registro que se publicará.
      */
+    @Around("@annotation(com.main_group_ekn47.eventlib.core.PublishEvent)")
     @PublishEvent(topic = "user-events", eventName = "UserRegisteredEvent")
     public UserRegisteredEvent registerUser() {
         // Lógica de ejemplo para crear el usuario.
