@@ -122,7 +122,7 @@ public class PublishEventAspect {
     }
 
     @Around("@annotation(com.main_group_ekn47.eventlib.core.PublishEvent)")
-    @Transactional
+   // @Transactional
     public Object handlePublishEvent(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         PublishEvent publishEvent = methodSignature.getMethod().getAnnotation(PublishEvent.class);
