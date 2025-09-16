@@ -1,7 +1,6 @@
 # Auto-configuration classes
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.main_group_ekn47.eventlib.config.EventLibAutoConfiguration,\
-com.main_group_ekn47.eventlib.config.RabbitMQAutoConfiguration,\
 com.main_group_ekn47.eventlib.config.DLQConfig,\
 com.main_group_ekn47.eventlib.config.OutboxAutoConfiguration,\
 com.main_group_ekn47.eventlib.config.MetricsConfig,\
