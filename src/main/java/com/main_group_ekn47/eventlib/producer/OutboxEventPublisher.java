@@ -14,31 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.main_group_ekn47.eventlib.core;
+package com.main_group_ekn47.eventlib.producer;
 
-/**
- * Evento base de integración.
- */
-public abstract class IntegrationEvent {
+import com.main_group_ekn47.eventlib.core.IntegrationEvent;
+import com.main_group_ekn47.eventlib.producer.outbox.OutboxProcessor;
+import reactor.core.publisher.Mono;
 
-    private final EventMetadata metadata = new EventMetadata();
+public class OutboxEventPublisher implements EventPublisher {
+    private final OutboxProcessor outboxProcessor;
 
-    public EventMetadata getMetadata() {
-        return metadata;
+    public OutboxEventPublisher(OutboxProcessor outboxProcessor) {
+        this.outboxProcessor = outboxProcessor;
     }
 
-    /**
-     * Nombre lógico del evento.
-     *
-     * Ej: user-created
-     */
-    public abstract String getEventName();
-
-    /**
-     * Este método permite que el EventDispatcher acceda al ID
-     * sin conocer los detalles internos de EventMetadata.
-     */
-    public String getEventId() {
-        return metadata.getEventId();
+    @Override
+    public Mono<Void> publish(IntegrationEvent event) {
+        return outboxProcessor.store(event);
     }
 }

@@ -1,0 +1,17 @@
+# eventlib configuration
+# Licensed to Elkim Andres Medranda Caicedo under the Apache License 2.0.
+# See the NOTICE file for details.
+eventlib:
+  infra:
+    rabbitmq:
+      exchange: eventlib.exchange
+      dlq:
+        suffix: .dlq
+      queues: {}
+
+    redis:
+      enabled: true
+      idempotency-prefix: eventlib:idempotency
+
+    outbox:
+      enabled: false

@@ -14,31 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.main_group_ekn47.eventlib.core;
+package com.main_group_ekn47.eventlib.producer.routing;
 
-/**
- * Evento base de integración.
- */
-public abstract class IntegrationEvent {
+import com.main_group_ekn47.eventlib.core.IntegrationEvent;
 
-    private final EventMetadata metadata = new EventMetadata();
+public interface EventRoutingResolver {
 
-    public EventMetadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * Nombre lógico del evento.
-     *
-     * Ej: user-created
-     */
-    public abstract String getEventName();
-
-    /**
-     * Este método permite que el EventDispatcher acceda al ID
-     * sin conocer los detalles internos de EventMetadata.
-     */
-    public String getEventId() {
-        return metadata.getEventId();
-    }
+    String resolveDestination(IntegrationEvent event);
 }

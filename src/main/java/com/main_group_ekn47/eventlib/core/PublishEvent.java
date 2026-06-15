@@ -1,3 +1,19 @@
+/*
+ * Licensed to Elkim Andres Medranda Caicedo under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * Elkim Andres Medranda Caicedo licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.main_group_ekn47.eventlib.core;
 
 import java.lang.annotation.ElementType;
@@ -5,21 +21,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/* **********************************************************************************************************
-*   LA ANOTACIÓN  @PublishEvent(topic = "user-events", eventName = "UserRegisteredEvent") DE LOS PRODUCER   *
-*********************************************************************************************************** */
-
-@Retention(RetentionPolicy.RUNTIME)
+/**
+ * Anotación para interceptar métodos que deben publicar eventos.
+ * Si el Outbox está activo, el aspecto lo guardará en la base de datos.
+ */
 @Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface PublishEvent {
-    String topic();
-    String eventName();
+    String topic() default "";     // Exchange o Tópico
+    String eventName() default ""; // Nombre del evento lógico
 }
-
-/*La función principal de la anotación @PublishEvent es actuar como una etiqueta o marcador para los métodos.
-Por sí misma, no realiza ninguna acción.
-
-Su propósito es proporcionar metadatos sobre un evento que debe ser publicado, permitiendo que otra parte
-de la aplicación (como un aspecto de AOP o un proxy de Spring) intercepte la llamada a ese método y realice
-la acción de publicación real.
-*/

@@ -14,31 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.main_group_ekn47.eventlib.core;
+package com.main_group_ekn47.eventlib.producer.outbox;
 
-/**
- * Evento base de integración.
- */
-public abstract class IntegrationEvent {
+import reactor.core.publisher.Flux;
 
-    private final EventMetadata metadata = new EventMetadata();
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
+import java.util.UUID;
 
-    public EventMetadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * Nombre lógico del evento.
-     *
-     * Ej: user-created
-     */
-    public abstract String getEventName();
-
-    /**
-     * Este método permite que el EventDispatcher acceda al ID
-     * sin conocer los detalles internos de EventMetadata.
-     */
-    public String getEventId() {
-        return metadata.getEventId();
-    }
+public interface OutboxRepository extends ReactiveCrudRepository<OutboxEvent, UUID> {
+    Flux<OutboxEvent> findAllByPublishedAtIsNull();
 }

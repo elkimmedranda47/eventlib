@@ -1,23 +1,51 @@
+/*
+ * Licensed to Elkim Andres Medranda Caicedo under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * Elkim Andres Medranda Caicedo licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.main_group_ekn47.eventlib.core;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
 
-@Getter
-@Setter
-@NoArgsConstructor
+/**
+ * Metadata estándar para eventos de integración.
+ */
 public class EventMetadata {
-    private String eventId;
-    private Instant timestamp;
-    private String eventType;
 
-    public EventMetadata(String eventType) {
+    private String eventId;
+    private Instant occurredAt;
+    private String source;
+
+    public EventMetadata() {
         this.eventId = UUID.randomUUID().toString();
-        this.timestamp = Instant.now();
-        this.eventType = eventType;
+        this.occurredAt = Instant.now();
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public Instant getOccurredAt() {
+        return occurredAt;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

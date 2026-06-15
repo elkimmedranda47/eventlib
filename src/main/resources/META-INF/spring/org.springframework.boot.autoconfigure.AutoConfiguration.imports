@@ -1,0 +1,8 @@
+# eventlib configuration
+# Licensed to Elkim Andres Medranda Caicedo under the Apache License 2.0.
+# See the NOTICE file for details.
+com.main_group_ekn47.eventlib.autoconfigure.EventLibAutoConfiguration
+com.main_group_ekn47.eventlib.autoconfigure.RabbitAutoConfiguration
+com.main_group_ekn47.eventlib.autoconfigure.ConsumerAutoConfiguration
+com.main_group_ekn47.eventlib.autoconfigure.RedisAutoConfiguration
+com.main_group_ekn47.eventlib.autoconfigure.OutboxAutoConfiguration

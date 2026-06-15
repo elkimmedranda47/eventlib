@@ -14,31 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.main_group_ekn47.eventlib.core;
+package com.main_group_ekn47.eventlib.config;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Evento base de integración.
+ * Configuración declarativa de Kafka.
  */
-public abstract class IntegrationEvent {
+public class KafkaProperties {
 
-    private final EventMetadata metadata = new EventMetadata();
+    /**
+     * Map<EventName, TopicName>
+     */
+    private Map<String, String> topics = new HashMap<>();
 
-    public EventMetadata getMetadata() {
-        return metadata;
+    public Map<String, String> getTopics() {
+        return topics;
     }
 
-    /**
-     * Nombre lógico del evento.
-     *
-     * Ej: user-created
-     */
-    public abstract String getEventName();
-
-    /**
-     * Este método permite que el EventDispatcher acceda al ID
-     * sin conocer los detalles internos de EventMetadata.
-     */
-    public String getEventId() {
-        return metadata.getEventId();
+    public void setTopics(Map<String, String> topics) {
+        this.topics = topics;
     }
 }

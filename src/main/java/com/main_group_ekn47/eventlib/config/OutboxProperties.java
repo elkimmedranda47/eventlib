@@ -14,31 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.main_group_ekn47.eventlib.core;
+package com.main_group_ekn47.eventlib.config;
 
 /**
- * Evento base de integración.
+ * Configuración del patrón Outbox.
+ *
+ * OPT-IN.
  */
-public abstract class IntegrationEvent {
+public class OutboxProperties {
 
-    private final EventMetadata metadata = new EventMetadata();
+    /**
+     * Activa el outbox.
+     */
+    private boolean enabled = false;
 
-    public EventMetadata getMetadata() {
-        return metadata;
+    /**
+     * Tamaño de lote para publicación.
+     */
+    private int batchSize = 100;
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    /**
-     * Nombre lógico del evento.
-     *
-     * Ej: user-created
-     */
-    public abstract String getEventName();
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-    /**
-     * Este método permite que el EventDispatcher acceda al ID
-     * sin conocer los detalles internos de EventMetadata.
-     */
-    public String getEventId() {
-        return metadata.getEventId();
+    public int getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
     }
 }
